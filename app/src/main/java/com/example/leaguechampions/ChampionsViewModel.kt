@@ -7,21 +7,25 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class ChampionsViewModel : ViewModel() {
 
+    private val _champions = MutableStateFlow<List<Champion>>(emptyList())
+    val champions: StateFlow<List<Champion>> = _champions
+
     fun reqTest() {
         viewModelScope.launch(Dispatchers.IO) {
-        val url = URL("http://www.girardon.com.br:3001/champions")
-        val urlConnection = url.openConnection() as HttpURLConnection
+            val url = URL("http://www.girardon.com.br:3001/champions")
+            val urlConnection = url.openConnection() as HttpURLConnection
             val input: InputStream = BufferedInputStream(urlConnection.inputStream)
             val responseContent = input.bufferedReader().use { it.readText() }
-
-            Log.d("Response", responseContent)
 
             val gson = Gson()
             val type = object : TypeToken<List<Champion>>() {}.type
@@ -31,9 +35,11 @@ class ChampionsViewModel : ViewModel() {
                 Log.d("Champion", champion.toString())
             }
 
+            withContext(Dispatchers.Main) {
+                _champions.value = championsList
+            }
+
             urlConnection.disconnect()
         }
-
     }
-
 }
