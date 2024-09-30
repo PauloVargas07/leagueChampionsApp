@@ -68,6 +68,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.gson)
-    implementation("io.coil-kt:coil-compose:2.2.2")
-    implementation ("androidx.navigation:navigation-compose:2.4.0-alpha10")
+    implementation(libs.coil.compose)
+    implementation (libs.androidx.navigation.compose)
+    implementation (libs.androidx.core.splashscreen)
 }

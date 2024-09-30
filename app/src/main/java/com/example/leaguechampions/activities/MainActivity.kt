@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.leaguechampions.ChampionsViewModel
@@ -26,8 +27,12 @@ import com.example.leaguechampions.ui.theme.MyApplicationTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
+
         setContent {
-            MyApplicationTheme {
+            MyApplicationTheme{
+                actionBar?.hide()
                 ChampionListScreen()
             }
         }
@@ -39,7 +44,7 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
     val champions by championsViewModel.champions.collectAsState(initial = emptyList())
 
     LaunchedEffect(Unit) {
-        championsViewModel.reqTest()
+        championsViewModel.getChampions()
     }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -70,9 +75,10 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                         .clickable {
-                            val intent = Intent(context, ChampionDetailsActivity::class.java).apply {
-                                putExtra("CHAMPION", Gson().toJson(champion))
-                            }
+                            val intent =
+                                Intent(context, ChampionDetailsActivity::class.java).apply {
+                                    putExtra("CHAMPION", Gson().toJson(champion))
+                                }
                             context.startActivity(intent)
                         },
                     elevation = CardDefaults.cardElevation(4.dp),

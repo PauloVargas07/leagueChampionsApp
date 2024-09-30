@@ -2,8 +2,8 @@ package com.example.leaguechampions
 
 data class ChampionStats(
     val hp: Double,
-    val hpperLevel: Double,
-    val mpperLevel: Double,
+    val hpperlevel: Double,
+    val mpperlevel: Double,
     val mp: Double,
     val movespeed: Double,
     val armor: Double,

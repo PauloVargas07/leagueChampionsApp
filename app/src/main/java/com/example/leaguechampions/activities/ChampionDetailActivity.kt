@@ -147,6 +147,15 @@ fun ChampionDetailsScreen(champion: Champion?, onBackClicked: () -> Unit) {
                     Pair("https://static.wikia.nocookie.net/leagueoflegends/images/3/31/Health_regeneration_icon.png/revision/latest/scale-to-width-down/14?cb=20240607102806", "Health Regen" to champion?.stats?.hpregen),
                     Pair("https://static.wikia.nocookie.net/leagueoflegends/images/1/13/Range_icon.png/revision/latest/scale-to-width-down/14?cb=20170715002053", "Attack Range" to champion?.stats?.attackrange),
                     Pair("https://static.wikia.nocookie.net/leagueoflegends/images/c/cc/Chance_de_Acerto_Cr%C3%ADtico_%C3%8Dcone.png/revision/latest/scale-to-width-down/16?cb=20210418131915&path-prefix=pt-br", "Critical Strike" to champion?.stats?.crit),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/3/31/Health_regeneration_icon.png/revision/latest/scale-to-width-down/15?cb=20240607102806", "Health per Level" to champion?.stats?.hpperlevel),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/8/8b/Mana_icon.png/revision/latest/scale-to-width-down/15?cb=20240607103302", "Mana" to champion?.stats?.mp),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/8/8b/Mana_icon.png/revision/latest/scale-to-width-down/15?cb=20240607103302", "Mana per Level" to champion?.stats?.mpperlevel),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/f/f0/Armor_icon.png/revision/latest/scale-to-width-down/15?cb=20170515203442", "Armor per Level" to champion?.stats?.armorperlevel),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/8/84/Magic_resistance_icon.png/revision/latest/scale-to-width-down/14?cb=20170515203539", "Magic Resist per Level" to champion?.stats?.spellblockperlevel),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/0/0c/Mana_regeneration_icon.png/revision/latest/scale-to-width-down/15?cb=20240607103627", "Mana Regen" to champion?.stats?.mpregen),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/0/0c/Mana_regeneration_icon.png/revision/latest/scale-to-width-down/15?cb=20240607103627", "Mana Regen per Level" to champion?.stats?.mpregenperlevel),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/7/75/Attack_damage_icon.png/revision/latest/scale-to-width-down/14?cb=20170515203443", "Attack Damage per Level" to champion?.stats?.attackdamageperlevel),
+                    Pair("https://static.wikia.nocookie.net/leagueoflegends/images/9/91/Attack_speed_icon.png/revision/latest/scale-to-width-down/14?cb=20170515203443", "Attack Speed per Level" to champion?.stats?.attackspeedperlevel)
                 )
 
                 stats.chunked(3).forEach { rowStats ->

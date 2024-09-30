@@ -20,7 +20,7 @@ class ChampionsViewModel : ViewModel() {
     private val _champions = MutableStateFlow<List<Champion>>(emptyList())
     val champions: StateFlow<List<Champion>> = _champions
 
-    fun reqTest() {
+    fun getChampions() {
         viewModelScope.launch(Dispatchers.IO) {
             val url = URL("http://www.girardon.com.br:3001/champions")
             val urlConnection = url.openConnection() as HttpURLConnection
@@ -30,10 +30,6 @@ class ChampionsViewModel : ViewModel() {
             val gson = Gson()
             val type = object : TypeToken<List<Champion>>() {}.type
             val championsList: List<Champion> = gson.fromJson(responseContent, type)
-
-            championsList.forEach { champion ->
-                Log.d("Champion", champion.toString())
-            }
 
             withContext(Dispatchers.Main) {
                 _champions.value = championsList
