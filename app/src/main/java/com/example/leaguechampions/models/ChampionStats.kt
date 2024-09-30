@@ -1,4 +1,4 @@
-package com.example.leaguechampions
+package com.example.leaguechampions.models
 
 data class ChampionStats(
     val hp: Double,

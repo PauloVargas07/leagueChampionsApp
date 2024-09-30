@@ -1,8 +1,8 @@
-package com.example.leaguechampions
+package com.example.leaguechampions.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.leaguechampions.models.Champion
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers

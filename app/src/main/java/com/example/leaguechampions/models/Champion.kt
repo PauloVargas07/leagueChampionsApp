@@ -1,4 +1,4 @@
-package com.example.leaguechampions
+package com.example.leaguechampions.models
 
 data class Champion(
     val id : String,

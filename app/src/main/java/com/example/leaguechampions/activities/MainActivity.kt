@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.example.leaguechampions.ChampionsViewModel
+import com.example.leaguechampions.viewmodels.ChampionsViewModel
 import com.google.gson.Gson
 import com.example.leaguechampions.ui.theme.MyApplicationTheme
 

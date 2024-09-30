@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import com.google.gson.Gson
 import com.example.leaguechampions.ui.theme.MyApplicationTheme
 import androidx.compose.runtime.*
@@ -26,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import com.example.leaguechampions.Champion
+import com.example.leaguechampions.models.Champion
 
 class ChampionDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

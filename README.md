@@ -11,15 +11,18 @@ Este projeto é um aplicativo Android desenvolvido em **Kotlin**, utilizando **J
 
 O projeto contém os seguintes arquivos principais:
 
-### Pacote: `com.example.leaguechampions`
+### Pacote: `com.example.leaguechampions.models`
 
-- **ChampionsViewModel**: Classe `ViewModel` responsável por realizar a requisição HTTP para obter os dados dos campeões. Os dados são armazenados em um `StateFlow` que é observado pela UI.
 - **Champion**: Modelo de dados que representa um campeão do jogo.
 
 ### Pacote: `com.example.leaguechampions.activities`
 
 - **MainActivity**: A atividade principal do aplicativo, onde é exibida a lista de campeões. Os campeões são exibidos em uma lista com a possibilidade de pesquisa.
 - **ChampionDetailsActivity**: Atividade que mostra os detalhes de um campeão selecionado, incluindo imagem, descrição e estatísticas.
+
+### Pacote: `com.example.leaguechampions.viewmodels`
+
+- **ChampionsViewModel**: Classe `ViewModel` responsável por realizar a requisição HTTP para obter os dados dos campeões. Os dados são armazenados em um `StateFlow` que é observado pela UI.
 
 ### Recursos Utilizados
 
