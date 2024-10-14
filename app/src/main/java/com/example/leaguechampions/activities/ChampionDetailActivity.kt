@@ -1,31 +1,32 @@
 package com.example.leaguechampions.activities
 
+import android.annotation.SuppressLint
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import com.google.gson.Gson
-import com.example.leaguechampions.ui.theme.MyApplicationTheme
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.leaguechampions.models.Champion
+import com.example.leaguechampions.ui.theme.MyApplicationTheme
+import com.google.gson.Gson
+import java.io.IOException
 
 class ChampionDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,19 +46,51 @@ class ChampionDetailsActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("DiscouragedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChampionDetailsScreen(champion: Champion?, onBackClicked: () -> Unit) {
+    val context = LocalContext.current
+    var mediaPlayer by remember { mutableStateOf<MediaPlayer?>(null) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
+                    Text(champion?.name ?: "")
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClicked) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        champion?.let {
+                            mediaPlayer?.stop()
+                            mediaPlayer?.release()
+                            mediaPlayer = null
+
+                            val audioResId = context.resources.getIdentifier(it.id.lowercase(), "raw", context.packageName)
+                            if (audioResId != 0) {
+                                mediaPlayer = MediaPlayer.create(context, audioResId)
+                                mediaPlayer?.start()
+                                mediaPlayer?.setOnCompletionListener { mp ->
+                                    mp.release()
+                                    mediaPlayer = null
+                                }
+                            } else {
+                                Toast.makeText(context, "Som não disponível para este campeão.", Toast.LENGTH_SHORT).show()
+                                Log.e("ChampionDetails", "Arquivo de áudio não encontrado para o campeão: ${it.id}")
+                            }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = "Play Sound"
                         )
                     }
                 }
@@ -67,11 +100,11 @@ fun ChampionDetailsScreen(champion: Champion?, onBackClicked: () -> Unit) {
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding) // Garantindo o padding da barra superior
-                .padding(16.dp) // Padding interno para o conteúdo
+                .padding(innerPadding)
+                .padding(16.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Top, // Garante que os itens da coluna fiquem no topo
-            horizontalAlignment = Alignment.Start // Alinha os itens à esquerda
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
         ) {
 
             Row(
@@ -110,7 +143,6 @@ fun ChampionDetailsScreen(champion: Champion?, onBackClicked: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Descrição
             Text(
                 text = "Description",
                 style = MaterialTheme.typography.headlineSmall.copy(
@@ -126,7 +158,6 @@ fun ChampionDetailsScreen(champion: Champion?, onBackClicked: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Estatísticas
             Text(
                 text = "Stats",
                 style = MaterialTheme.typography.headlineSmall.copy(
