@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.ChampionDetailsActivity"/>
+        <activity android:name=".activities.TeamsActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
