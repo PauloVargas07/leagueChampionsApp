@@ -11,6 +11,8 @@ import com.example.leaguechampions.models.Champion
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -26,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.unit.Dp
 
 class TeamsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,23 +89,44 @@ fun TeamsScreen(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = "Time 1",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                ChampionTeamRow(team = team1)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Time 1",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                        )
+                        Spacer(modifier = Modifier.height(1.dp))
+                        ChampionTeamColumn(team = team1, cardSize = 50.dp)
+                    }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Time 2",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Red
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                ChampionTeamRow(team = team2)
+                    Column(
+                        modifier = Modifier
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Time 2",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.Red,
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .clip(MaterialTheme.shapes.medium)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        ChampionTeamColumn(team = team2, cardSize = 50.dp)
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -118,7 +142,10 @@ fun TeamsScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
                 ) {
                     Text("Compartilhar Times")
                 }
@@ -128,30 +155,38 @@ fun TeamsScreen(
 }
 
 @Composable
-fun ChampionTeamRow(team: List<Champion>) {
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(18.dp)
+fun ChampionTeamColumn(team: List<Champion>, cardSize: Dp) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(team) { champion ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.width(60.dp)
+        team.forEach { champion ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(Color(0xFFE1E3EB), shape = MaterialTheme.shapes.medium)
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(8.dp)
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(model = champion.icon),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(cardSize)
                         .clip(CircleShape)
+                        .border(2.dp, Color.Gray, CircleShape)
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = champion.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    maxLines = 2,
-                    fontSize = 13.sp
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp)
                 )
             }
         }
