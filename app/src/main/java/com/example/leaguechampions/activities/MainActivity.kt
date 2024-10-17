@@ -97,13 +97,8 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
 
                             context.startActivity(intent)
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                // Request notification permission
-                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            } else {
-                                // Permission not required for earlier versions
-                                sendTeamNotification(context)
-                            }
+                            sendTeamNotification(context)
+
                         } else {
                             Toast.makeText(
                                 context,
