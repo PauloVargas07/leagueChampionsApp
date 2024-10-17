@@ -88,11 +88,13 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
             BottomAppBar {
                 Button(
                     onClick = {
-                        if (champions.size >= 10) {
+                        try {
                             val teams = drawRandomTeams(champions)
+
                             val intent = Intent(context, TeamsActivity::class.java).apply {
                                 putExtra("TEAM1", Gson().toJson(teams.first))
                                 putExtra("TEAM2", Gson().toJson(teams.second))
+
                             }
 
                             context.startActivity(intent)
@@ -104,13 +106,16 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
                                 // Permission not required for earlier versions
                                 sendTeamNotification(context)
                             }
-                        } else {
+                        } catch(e: Error) {
                             Toast.makeText(
                                 context,
-                                "Não há campeões suficientes para sortear.",
+                                e.message,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+
+
+
                     },
                     modifier = Modifier
                         .fillMaxWidth()
