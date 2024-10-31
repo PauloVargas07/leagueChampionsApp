@@ -30,7 +30,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.leaguechampions.R
-import com.example.leaguechampions.helpers.drawRandomTeams
 import com.example.leaguechampions.models.Champion
 import com.example.leaguechampions.viewmodels.ChampionsViewModel
 import com.google.gson.Gson
@@ -56,6 +55,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
     val champions by championsViewModel.champions.collectAsState(initial = emptyList())
+    val teams by championsViewModel.teams.collectAsState()
     val isLoading by championsViewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -101,15 +101,18 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
             BottomAppBar {
                 Button(
                     onClick = {
-                        val teams = drawRandomTeams(champions)
-                        val intent = Intent(context, TeamsActivity::class.java).apply {
-                            putExtra("TEAM1", Gson().toJson(teams.first))
-                            putExtra("TEAM2", Gson().toJson(teams.second))
+                        championsViewModel.generateTeamsAndAssignItems()
+                        teams?.let { (team1,  team2) ->
+                            val intent = Intent(context, TeamsActivity::class.java).apply {
+                                putExtra("TEAM1", Gson().toJson(team1))
+                                putExtra("TEAM2", Gson().toJson(team2))
+                            }
+                            context.startActivity(intent)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                            } else sendTeamNotification(context)
                         }
-                        context.startActivity(intent)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        } else sendTeamNotification(context)
+
                     },
                     modifier = Modifier.fillMaxWidth().padding(8.dp)
                 ) {

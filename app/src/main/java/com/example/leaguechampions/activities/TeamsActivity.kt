@@ -13,14 +13,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -28,9 +32,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.example.leaguechampions.R
+import com.example.leaguechampions.models.Item
+
 
 class TeamsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,7 +169,13 @@ fun TeamsScreen(
 }
 
 @Composable
-fun ChampionTeamColumn(team: List<Champion>, cardSize: Dp) {
+fun ChampionTeamColumn(
+    team: List<Champion>,
+    cardSize: Dp
+) {
+    // Keep track of expanded champion IDs
+    val expandedChampionIds = remember { mutableStateListOf<String>() }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -168,35 +183,80 @@ fun ChampionTeamColumn(team: List<Champion>, cardSize: Dp) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         team.forEach { champion ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            val isExpanded = expandedChampionIds.contains(champion.id)
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
                     .background(Color(0xFFE1E3EB), shape = MaterialTheme.shapes.medium)
                     .clip(MaterialTheme.shapes.medium)
+                    .clickable {
+                        if (isExpanded) {
+                            expandedChampionIds.remove(champion.id)
+                        } else {
+                            expandedChampionIds.add(champion.id)
+                        }
+                    }
                     .padding(8.dp)
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(model = champion.icon),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(cardSize)
-                        .clip(CircleShape)
-                        .border(2.dp, Color.Gray, CircleShape)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = champion.name,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 8.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = champion.icon),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(cardSize)
+                            .clip(CircleShape)
+                            .border(2.dp, Color.Gray, CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = champion.name,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 8.dp)
+                    )
+                    Icon(
+                        imageVector = if (isExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null
+                    )
+                }
+                if (isExpanded) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ChampionItemsRow(champion.items)
+                }
             }
         }
     }
 }
+
+@Composable
+fun ChampionItemsRow(items: List<Item>) {
+    if (items.isNotEmpty()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items.forEach { item ->
+                Image(
+                    painter = rememberAsyncImagePainter(model = item.icon),
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                )
+            }
+        }
+    } else {
+        Text(text = "No items assigned.", style = MaterialTheme.typography.bodySmall)
+    }
+}
+
 
 fun shareText(context: Context, text: String) {
     val intent = Intent(Intent.ACTION_SEND).apply {

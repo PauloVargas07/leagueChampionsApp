@@ -10,6 +10,7 @@ data class Champion(
     val icon: String,
     val sprite : ChampionSprite,
     val description: String,
+    val items: List<Item> = emptyList()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
