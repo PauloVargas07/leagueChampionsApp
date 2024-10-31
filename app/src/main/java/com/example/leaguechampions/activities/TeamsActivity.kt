@@ -28,7 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import com.example.leaguechampions.R
 
 class TeamsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +63,15 @@ fun TeamsScreen(
 ) {
     val context = LocalContext.current
 
+    val team1Title = stringResource(id = R.string.team_1)
+    val team2Title = stringResource(id = R.string.team_2)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Times Gerados",
+                        text = stringResource(id = R.string.generated_teams),
                         style = MaterialTheme.typography.headlineSmall
                     )
                 },
@@ -74,7 +79,7 @@ fun TeamsScreen(
                     IconButton(onClick = onBackClicked) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Voltar"
+                            contentDescription = stringResource(id = R.string.back)
                         )
                     }
                 }
@@ -99,7 +104,7 @@ fun TeamsScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Time 1",
+                            text = stringResource(id = R.string.team_1),
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
@@ -116,7 +121,7 @@ fun TeamsScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Time 2",
+                            text = stringResource(id = R.string.team_2),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.Red,
                             modifier = Modifier
@@ -133,9 +138,9 @@ fun TeamsScreen(
                 Button(
                     onClick = {
                         val shareText = buildString {
-                            append("Time 1:\n")
+                            append("${team1Title}:\n")
                             team1.forEach { append("- ${it.name}\n") }
-                            append("\nTime 2:\n")
+                            append("\n${team2Title}:\n")
                             team2.forEach { append("- ${it.name}\n") }
                         }
                         shareText(context, shareText)
@@ -147,7 +152,7 @@ fun TeamsScreen(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
-                    Text("Compartilhar Times")
+                    Text(stringResource(id = R.string.share_teams))
                 }
             }
         }

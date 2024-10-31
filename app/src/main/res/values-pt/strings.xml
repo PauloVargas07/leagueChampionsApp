@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Campeões da Liga</string>
+    <string name="back">Voltar</string>
+    <string name="play_sound">Tocar Som</string>
+    <string name="no_sound_available">Som não disponível para este campeão.</string>
+    <string name="description">Descrição</string>
+    <string name="stats">Atributos</string>
+    <string name="attack_damage">Dano de Ataque</string>
+    <string name="health">Vida</string>
+    <string name="armor">Armadura</string>
+    <string name="move_speed">Velocidade de Movimento</string>
+    <string name="attack_speed">Velocidade de Ataque</string>
+    <string name="magic_resist">Resistência Mágica</string>
+    <string name="health_regen">Regeneração de Vida</string>
+    <string name="attack_range">Alcance de Ataque</string>
+    <string name="critical_strike">Acerto Crítico</string>
+    <string name="health_per_level">Vida por Nível</string>
+    <string name="mana">Mana</string>
+    <string name="mana_per_level">Mana por Nível</string>
+    <string name="armor_per_level">Armadura por Nível</string>
+    <string name="magic_resist_per_level">Resistência Mágica por Nível</string>
+    <string name="mana_regen">Regeneração de Mana</string>
+    <string name="mana_regen_per_level">Regen. de Mana por Nível</string>
+    <string name="attack_damage_per_level">Dano de Ataque por Nível</string>
+    <string name="attack_speed_per_level">Velocidade de Ataque por Nível</string>
+    <string name="sort_teams">Sortear Times</string>
+    <string name="search_champions">Pesquisar Campeões</string>
+    <string name="generated_teams">Times Gerados</string>
+    <string name="team_1">Time 1</string>
+    <string name="team_2">Time 2</string>
+    <string name="share_teams">Compartilhar Times</string>
+    <string name="share_via">Compartilhar via</string>
+    <string name="permission_denied">Permissão para enviar notificações foi negada.</string>
+</resources>

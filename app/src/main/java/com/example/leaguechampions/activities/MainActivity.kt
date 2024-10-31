@@ -24,10 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.example.leaguechampions.R
 import com.example.leaguechampions.helpers.drawRandomTeams
 import com.example.leaguechampions.models.Champion
 import com.example.leaguechampions.viewmodels.ChampionsViewModel
@@ -61,12 +63,8 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
     }
 
     var searchQuery by remember { mutableStateOf("") }
-    val filteredChampions = if (searchQuery.isEmpty()) {
-        champions
-    } else {
-        champions.filter {
-            it.name.contains(searchQuery, ignoreCase = true)
-        }
+    val filteredChampions = if (searchQuery.isEmpty()) champions else champions.filter {
+        it.name.contains(searchQuery, ignoreCase = true)
     }
 
     val listState = rememberLazyListState()
@@ -85,17 +83,15 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
     }
     val context = LocalContext.current
 
+    val permissionDeniedMessage = stringResource(id = R.string.permission_denied)
+
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
                 sendTeamNotification(context)
             } else {
-                Toast.makeText(
-                    context,
-                    "Permission to send notifications was denied.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, permissionDeniedMessage, Toast.LENGTH_SHORT).show()
             }
         }
     )
@@ -105,56 +101,31 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
             BottomAppBar {
                 Button(
                     onClick = {
-                        try {
-                            val teams = drawRandomTeams(champions)
-
-                            val intent = Intent(context, TeamsActivity::class.java).apply {
-                                putExtra("TEAM1", Gson().toJson(teams.first))
-                                putExtra("TEAM2", Gson().toJson(teams.second))
-
-                            }
-
-                            context.startActivity(intent)
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                // Request notification permission
-                                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                            } else {
-                                // Permission not required for earlier versions
-                                sendTeamNotification(context)
-                            }
-                        } catch(e: Error) {
-                            Toast.makeText(
-                                context,
-                                e.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                        val teams = drawRandomTeams(champions)
+                        val intent = Intent(context, TeamsActivity::class.java).apply {
+                            putExtra("TEAM1", Gson().toJson(teams.first))
+                            putExtra("TEAM2", Gson().toJson(teams.second))
                         }
-
-
-
+                        context.startActivity(intent)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        } else sendTeamNotification(context)
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(8.dp)
                 ) {
-                    Text("Sortear Times")
+                    Text(stringResource(id = R.string.sort_teams))
                 }
             }
         },
         content = { innerPadding ->
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
+                modifier = Modifier.fillMaxSize().padding(innerPadding)
             ) {
                 TextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    label = { Text("Pesquisar Campeões") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                    label = { Text(stringResource(id = R.string.search_champions)) },
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
                 )
                 LazyColumn(
                     modifier = Modifier
