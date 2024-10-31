@@ -169,11 +169,15 @@ fun TeamsScreen(
 }
 
 @Composable
-fun ChampionTeamColumn(
-    team: List<Champion>,
-    cardSize: Dp
-) {
-    // Keep track of expanded champion IDs
+fun ChampionTeamColumn(team: List<Champion>, cardSize: Dp) {
+    val iconUrls = listOf(
+        "https://static.wikia.nocookie.net/leagueoflegends/images/e/ef/Top_icon.png/revision/latest/scale-to-width-down/32?cb=20181117143602",
+        "https://static.wikia.nocookie.net/leagueoflegends/images/1/1b/Jungle_icon.png/revision/latest/scale-to-width-down/32?cb=20181117143559",
+        "https://static.wikia.nocookie.net/leagueoflegends/images/9/98/Middle_icon.png/revision/latest/scale-to-width-down/32?cb=20181117143644",
+        "https://static.wikia.nocookie.net/leagueoflegends/images/9/97/Bottom_icon.png/revision/latest/scale-to-width-down/32?cb=20181117143632",
+        "https://static.wikia.nocookie.net/leagueoflegends/images/e/e0/Support_icon.png/revision/latest/scale-to-width-down/32?cb=20181117143601"
+    )
+
     val expandedChampionIds = remember { mutableStateListOf<String>() }
 
     Column(
@@ -182,11 +186,11 @@ fun ChampionTeamColumn(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        team.forEach { champion ->
+        team.forEachIndexed { index, champion ->
             val isExpanded = expandedChampionIds.contains(champion.id)
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .widthIn(max = 600.dp)
                     .padding(8.dp)
                     .background(Color(0xFFE1E3EB), shape = MaterialTheme.shapes.medium)
                     .clip(MaterialTheme.shapes.medium)
@@ -202,6 +206,17 @@ fun ChampionTeamColumn(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    if (index < iconUrls.size) {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = iconUrls[index]),
+
+                            contentDescription = "Icon",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
                     Image(
                         painter = rememberAsyncImagePainter(model = champion.icon),
                         contentDescription = null,
@@ -211,18 +226,21 @@ fun ChampionTeamColumn(
                             .border(2.dp, Color.Gray, CircleShape)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = champion.name,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp)
-                    )
+//                    Text(
+//                        text = champion.name,
+//                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+//                        modifier = Modifier
+//                            .weight(1f)
+//                            .padding(horizontal = 8.dp)
+//                    )
                     Icon(
                         imageVector = if (isExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                         contentDescription = null
                     )
                 }
+
+
+
                 if (isExpanded) {
                     Spacer(modifier = Modifier.height(8.dp))
                     ChampionItemsRow(champion.items)
