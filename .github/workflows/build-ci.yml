@@ -45,9 +45,9 @@ jobs:
             
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-
+  
       - name: Build and Analyze Code
-        run: ./gradlew -Dskip.tests build
+        run: ./gradlew -Dskip.tests build --stacktrace --info
 
       # - name: Run Unit Tests
       #   run: ./gradlew test
