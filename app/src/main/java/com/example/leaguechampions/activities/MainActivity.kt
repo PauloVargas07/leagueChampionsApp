@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,6 +16,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -52,9 +54,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
     val champions by championsViewModel.champions.collectAsState(initial = emptyList())
+    val isLoading by championsViewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
-        championsViewModel.getChampions()
+        championsViewModel.loadNextPage()
     }
 
     var searchQuery by remember { mutableStateOf("") }
@@ -66,6 +69,20 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
         }
     }
 
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            val layoutInfo = listState.layoutInfo
+            val totalItems = layoutInfo.totalItemsCount
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            Pair(totalItems, lastVisibleItem)
+        }.collect { (totalItems, lastVisibleItem) ->
+            if (lastVisibleItem >= totalItems - 5 && !isLoading && championsViewModel.currentPage <= 10) {
+                championsViewModel.loadNextPage()
+            }
+        }
+    }
     val context = LocalContext.current
 
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
@@ -142,7 +159,8 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 16.dp),
+                    state = listState
                 ) {
                     items(filteredChampions) { champion ->
                         ChampionCard(champion, context)

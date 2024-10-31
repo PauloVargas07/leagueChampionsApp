@@ -26,34 +26,54 @@ class ChampionsViewModel (application: Application) : AndroidViewModel(applicati
     private val sharedPreferences = application.getSharedPreferences("champions_prefs", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    init {
-        loadChampionsFromLocalStorage()
+//    init {
+//        loadChampionsFromLocalStorage()
+//    }
+
+    var isLoading = MutableStateFlow(false)
+        private set
+
+    var currentPage = 1
+        private set
+
+    private val maxPage = 10
+
+    fun loadNextPage() {
+        if (currentPage > maxPage) return
+        if (isLoading.value) return
+
+        getChampions(currentPage)
+        currentPage++
     }
 
-    fun getChampions() {
+    private fun getChampions(page: Int) {
+        isLoading.value = true
+
         viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val url = URL("http://www.girardon.com.br:3001/champions?page=$page")
+                val urlConnection = url.openConnection() as HttpURLConnection
+                val input: InputStream = BufferedInputStream(urlConnection.inputStream)
+                val responseContent = input.bufferedReader().use { it.readText() }
 
-            if (_champions.value.isNotEmpty()) {
-                return@launch
+                val type = object : TypeToken<List<Champion>>() {}.type
+                val championsList: List<Champion> = gson.fromJson(responseContent, type)
+
+//                saveChampionsToLocalStorage(championsList)
+
+                withContext(Dispatchers.Main) {
+                    _champions.value += championsList
+                }
+
+                urlConnection.disconnect()
+            } catch (e: Exception) {
+                Log.d("error", "${e.message}")
+            } finally {
+                isLoading.value = false
             }
-
-            val url = URL("http://www.girardon.com.br:3001/champions")
-            val urlConnection = url.openConnection() as HttpURLConnection
-            val input: InputStream = BufferedInputStream(urlConnection.inputStream)
-            val responseContent = input.bufferedReader().use { it.readText() }
-
-            val type = object : TypeToken<List<Champion>>() {}.type
-            val championsList: List<Champion> = gson.fromJson(responseContent, type)
-
-            saveChampionsToLocalStorage(championsList)
-
-            withContext(Dispatchers.Main) {
-                _champions.value = championsList
-            }
-
-            urlConnection.disconnect()
         }
     }
+
 
     private fun saveChampionsToLocalStorage(championsList: List<Champion>) {
         val championsJson = gson.toJson(championsList)
