@@ -22,6 +22,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -115,6 +116,8 @@ fun ChampionListScreen(championsViewModel: ChampionsViewModel = viewModel()) {
                         }
 
                     },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0397AB)),
+                    shape = RoundedCornerShape(4.dp),
                     modifier = Modifier.fillMaxWidth().padding(8.dp)
                 ) {
                     Text(stringResource(id = R.string.sort_teams))
@@ -160,6 +163,7 @@ fun ChampionCard(champion: Champion, context: Context) {
                 context.startActivity(intent)
             },
         elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF3C3C41))
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
             Image(
@@ -172,8 +176,8 @@ fun ChampionCard(champion: Champion, context: Context) {
                 contentScale = ContentScale.Crop,
             )
             Column {
-                Text(text = champion.name, style = MaterialTheme.typography.titleLarge)
-                Text(text = champion.title, style = MaterialTheme.typography.bodyMedium)
+                Text(text = champion.name, style = MaterialTheme.typography.titleLarge, color = Color.White)
+                Text(text = champion.title, style = MaterialTheme.typography.bodyMedium, color = Color.White)
             }
         }
     }

@@ -37,7 +37,20 @@ describe('Open Champion Card', () => {
         await browser.pause(4000);
 
         await browser.back();
+
+        // const shareTeamsButton = await $(`//android.widget.TextView[@text='Share Teams']`);
+        // await shareTeamsButton.waitForDisplayed({ timeout: 5000 });
+        // await shareTeamsButton.click();
+
+        const backButton = await $(`//android.widget.ImageView[contains(@resource-id, 'icon_id')]`);
+        await backButton.waitForDisplayed({ timeout: 5000 });
+        await backButton.click();
     })
+
+    // it('items', async () => {
+    //
+    // })
+
 })
 
 

@@ -157,10 +157,9 @@ fun TeamsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
+                    shape = RoundedCornerShape(4.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0397AB)),
+                    ) {
                     Text(stringResource(id = R.string.share_teams))
                 }
             }
@@ -192,7 +191,7 @@ fun ChampionTeamColumn(team: List<Champion>, cardSize: Dp) {
                 modifier = Modifier
                     .widthIn(max = 600.dp)
                     .padding(8.dp)
-                    .background(Color(0xFFE1E3EB), shape = MaterialTheme.shapes.medium)
+                    .background(Color(0xFF3C3C41), shape = MaterialTheme.shapes.medium)
                     .clip(MaterialTheme.shapes.medium)
                     .clickable {
                         if (isExpanded) {
@@ -239,8 +238,6 @@ fun ChampionTeamColumn(team: List<Champion>, cardSize: Dp) {
                     )
                 }
 
-
-
                 if (isExpanded) {
                     Spacer(modifier = Modifier.height(8.dp))
                     ChampionItemsRow(champion.items)
@@ -256,6 +253,7 @@ fun ChampionItemsRow(items: List<Item>) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(Color(0xFF1C1C1E))
                 .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -266,7 +264,7 @@ fun ChampionItemsRow(items: List<Item>) {
                     modifier = Modifier
                         .size(40.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
                 )
             }
         }
