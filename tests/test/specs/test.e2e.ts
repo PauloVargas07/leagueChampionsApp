@@ -1,7 +1,5 @@
-describe('My Login application', () => {
+describe('Open Champion Card', () => {
     it('should login with valid credentials', async () => {
-
-        await browser.pause(5990);
 
         const championCardDetail = await $(`//android.widget.TextView[@text='Aatrox']`);
         await championCardDetail.waitForDisplayed({ timeout: 5000 });
@@ -11,7 +9,36 @@ describe('My Login application', () => {
         await championSound.waitForDisplayed({ timeout: 5000 });
         await championSound.click();
 
-        await browser.pause(12000);
+        await browser.pause(6000);
+        const backButton = await $('~Back');
+        await backButton.click();
+        await browser.pause(4000);
+    })
+
+    it('should sort teams and share', async () => {
+        const sortTeams = await $(`//android.widget.TextView[@text='Sort Teams']`);
+        await sortTeams.waitForDisplayed({ timeout: 5000 });
+        await sortTeams.click();
+        await browser.pause(500);
+        await sortTeams.click();
+
+        await browser.pause(4000);
+
+        const allowButton = await $(`//android.widget.Button[@text='Allow']`);
+        await allowButton.waitForDisplayed({ timeout: 5000 });
+        await allowButton.click();
+
+        await browser.pause(4000);
+
+        const shareTeamsButton = await $(`//android.widget.TextView[@text='Share Teams']`);
+        await shareTeamsButton.waitForDisplayed({ timeout: 5000 });
+        await shareTeamsButton.click();
+
+        await browser.pause(4000);
+
+        await browser.back();
     })
 })
+
+
 
