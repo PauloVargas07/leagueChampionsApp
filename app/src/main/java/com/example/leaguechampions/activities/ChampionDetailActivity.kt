@@ -19,7 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.leaguechampions.R
@@ -67,7 +70,8 @@ fun ChampionDetailsScreen(champion: Champion?, onBackClicked: () -> Unit) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
+                    IconButton(
+                        onClick = {
                         champion?.let {
                             mediaPlayer?.stop()
                             mediaPlayer?.release()
